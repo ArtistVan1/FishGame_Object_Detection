@@ -1,0 +1,26 @@
+<annotation>
+	<folder>JPEGImages</folder>
+	<filename>000111.jpg</filename>
+	<path>D:\fish_data\VOCdevkit_fish\VOC2012\JPEGImages\000111.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>6960</width>
+		<height>4640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>fish</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1821</xmin>
+			<ymin>1420</ymin>
+			<xmax>2585</xmax>
+			<ymax>2109</ymax>
+		</bndbox>
+	</object>
+</annotation>
