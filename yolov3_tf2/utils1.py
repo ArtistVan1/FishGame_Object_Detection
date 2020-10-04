@@ -2,7 +2,11 @@ from absl import logging
 import numpy as np
 import tensorflow as tf
 import cv2
-
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+s.bind(('192.168.50.35',8003))
+s.listen(5)
+msg,addr = s.accept()
 YOLOV3_LAYER_LIST = [
     'yolo_darknet',
     'yolo_conv_0',
@@ -106,10 +110,34 @@ def draw_outputs(img, outputs, class_names):
     for i in range(nums):
         x1y1 = tuple((np.array(boxes[i][0:2]) * wh).astype(np.int32))
         x2y2 = tuple((np.array(boxes[i][2:4]) * wh).astype(np.int32))
-        img = cv2.rectangle(img, x1y1, x2y2, (255, 0, 0), 2)
-        img = cv2.putText(img, '{} {:.4f}'.format(
-            class_names[int(classes[i])], objectness[i]),
-            x1y1, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
+	x1 = x1y1[0]
+	y1 = x1y1[1]
+	x2 = x2y2[0]
+	y2 = x2y2[1]
+	center_x = (x1+x2)/2
+	center_y = (y1+y2)/2
+	center = (center_x,center_y)
+	if class_names[int(classes[i])]=='fish':
+            #img = cv2.rectangle(img, x1y1, x2y2, (255, 0, 0), 2)
+	    img = cv2.line(img,(0,240),(640,240),(0,0,255),3,4)
+	    img = cv2.line(img,(200,0),(200,480),(0,0,255),3,4)
+	    img = cv2.line(img,(400,0),(400,480),(0,0,255),3,4)
+	    img = cv2.putText(img,"A",(100,120),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,(100,200,200),5)
+	    img = cv2.putText(img,"B",(300,120),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,(100,200,200),5)
+	    img = cv2.putText(img,"down",(500,120),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,(100,200,200),5)
+   	    img = cv2.putText(img,"left",(100,360),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,		(100,200,200),5)
+	    img = cv2.putText(img,"L",(300,360),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,(100,200,200),5)
+	    img = cv2.putText(img,"right",(500,360),cv2.FONT_HERSHEY_COMPLEX_SMALL,2.0,(100,200,200),5)
+	    img = cv2.circle(img,center,5,(0,0,255),4)
+	#print(str(center))
+	#print(class_names[int(classes[i])])
+	#if class_names[int(classes[i])]=='person':
+	    msg.send(str(center[0]).encode())
+	    msg.send(str(center[1]).encode())    
+	#print(img.shape)
+            img = cv2.putText(img, '{} {:.4f}'.format(
+                class_names[int(classes[i])], objectness[i]),
+                x1y1, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 2)
     return img
 
 

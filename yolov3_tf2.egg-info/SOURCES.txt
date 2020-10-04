@@ -1,4 +1,3 @@
-README.md
 setup.py
 yolov3_tf2/__init__.py
 yolov3_tf2/dataset.py

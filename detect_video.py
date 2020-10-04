@@ -1,4 +1,5 @@
 import time
+import socket
 from absl import app, flags, logging
 from absl.flags import FLAGS
 import cv2
@@ -9,17 +10,21 @@ from yolov3_tf2.models import (
 from yolov3_tf2.dataset import transform_images
 from yolov3_tf2.utils import draw_outputs
 
+#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+#s.bind(('192.168.43.99',d8801))
+#s.listen(5)
+#msg,addr = s.accept()
 
-flags.DEFINE_string('classes', './data/coco.names', 'path to classes file')
-flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
+flags.DEFINE_string('classes', './data/fish_voc2012.names', 'path to classes file')
+flags.DEFINE_string('weights', './checkpoints/yolov3_train_20.tf',
                     'path to weights file')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('size', 416, 'resize images to')
-flags.DEFINE_string('video', './data/video.mp4',
+flags.DEFINE_string('video', './video_test.mp4',
                     'path to video file or number for webcam)')
 flags.DEFINE_string('output', None, 'path to output video')
 flags.DEFINE_string('output_format', 'XVID', 'codec used in VideoWriter when saving video to file')
-flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
+flags.DEFINE_integer('num_classes', 1, 'number of classes in the model')
 
 
 def main(_argv):
@@ -72,6 +77,7 @@ def main(_argv):
         t2 = time.time()
         times.append(t2-t1)
         times = times[-20:]
+	
 
         img = draw_outputs(img, (boxes, scores, classes, nums), class_names)
         img = cv2.putText(img, "Time: {:.2f}ms".format(sum(times)/len(times)*1000), (0, 30),
@@ -86,7 +92,12 @@ def main(_argv):
 
 
 if __name__ == '__main__':
+    #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+    #s.bind(('192.168.43.99',8003))
+    #s.listen(5)
+    #msg,addr = s.accept()
     try:
         app.run(main)
     except SystemExit:
+	s.close()
         pass
